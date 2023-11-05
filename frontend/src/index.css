@@ -1,0 +1,292 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+}
+
+.logo a {
+  display: flex;
+  color: black;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+  padding: 5px;
+}
+
+p {
+  line-height: 1.7;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  line-height: 2.2;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.italicized a {
+  text-decoration: underline;
+  border: none;
+  font-style: italic;
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 60px;
+}
+
+.header ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header ul li {
+  margin-left: 20px;
+}
+
+.header ul li a {
+  display: flex;
+  align-items: center;
+}
+
+.header ul li a:hover {
+  color: #777;
+}
+
+.header ul li a svg {
+  margin-right: 5px;
+}
+
+.heading {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 50px;
+  padding: 0 20px;
+}
+
+.heading p {
+  color: #828282;
+}
+
+.form,
+.content {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+
+.form-group label {
+  text-align: left;
+  display: block;
+  margin: 0 0 5px 3px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  appearance: button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-block {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.dashboard-container {
+  animation: slide-down 1s ease-out forwards;
+}
+
+.error-label {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+/* modal */
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  overflow-y: hidden;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  animation: slide-down 300ms ease-out forwards;
+}
+
+.update-modal {
+  font-size: 12px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 30px;
+}
+
+.modal-buttons {
+  color: #aaa;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-buttons:hover,
+.modal-buttons:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.update-btn {
+  font-size: 10px;
+}
+
+.btn-red {
+  color: black;
+  background: rgba(255, 0, 0, 0.8);
+  font-size: 12px !important;
+  padding: 5px;
+}
+
+.btn-gray {
+  color: black;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 12px !important;
+  padding: 5px;
+}
+
+.btn-green {
+  color: black;
+  background: rgba(0, 255, 0, 0.8);
+  font-size: 12px !important;
+  padding: 5px;
+}
+
+.stocksItemContainer,
+.stocksContainer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.stocksInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+ul {
+  display: flex;
+  list-style: none;
+}
+
+li {
+  margin: 0 10px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .form {
+    width: 90%;
+  }
+
+  .heading h1 {
+    font-size: 2rem;
+  }
+
+  .heading p {
+    font-size: 1.5rem;
+  }
+}
