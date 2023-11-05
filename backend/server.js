@@ -323,6 +323,7 @@ app.get("/api/users/me", authenticateToken, async (req, res) => {
   }
 });
 
+//server start
 app.listen(PORT, () => {
   console.log(`App is listening to port ${PORT}`);
 });
