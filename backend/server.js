@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { connect } from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import Stocks from "./models/Stocks.js";
 import User from "./models/Users.js";
 
