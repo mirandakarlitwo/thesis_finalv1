@@ -30,7 +30,13 @@ function Dashboard() {
 
   // create stock
   //handle submit
-  const handleStockSubmit = async (name, category, price, quantity) => {
+  const handleStockSubmit = async (
+    productId,
+    name,
+    category,
+    price,
+    quantity
+  ) => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(`${URL}/api/stocks`, {
@@ -40,6 +46,7 @@ function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          productId,
           name,
           category,
           price,
@@ -126,10 +133,11 @@ function Dashboard() {
         <table>
           <thead>
             <tr>
+              <th>Product ID</th>
               <th>Product Name</th>
-              <th>Category</th>
+              <th>Categ.</th>
               <th>Price</th>
-              <th>Quantity</th>
+              <th>Qty</th>
             </tr>
           </thead>
           <tbody>

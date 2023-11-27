@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function StocksForm({ onStocksSubmit }) {
   const [stockForm, setStockForm] = useState({
+    productId: "",
     name: "",
     category: "",
     price: "",
@@ -17,10 +18,11 @@ function StocksForm({ onStocksSubmit }) {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const { name, category, price, quantity } = stockForm;
-    onStocksSubmit(name, category, price, quantity);
+    const { productId, name, category, price, quantity } = stockForm;
+    onStocksSubmit(productId, name, category, price, quantity);
 
     setStockForm({
+      productId: "",
       name: "",
       category: "",
       price: "",
@@ -30,11 +32,22 @@ function StocksForm({ onStocksSubmit }) {
     alert("Stock created successfully");
   };
 
-  const { name, category, price, quantity } = stockForm;
+  const { productId, name, category, price, quantity } = stockForm;
 
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group">
+        <label>Product ID:</label>
+        <input
+          className="form-control"
+          type="text"
+          id="productId"
+          name="productId"
+          value={productId}
+          placeholder="Enter Product Id"
+          autoComplete="off"
+          onChange={handleChange}
+        />
         <label>Name:</label>
         <input
           className="form-control"

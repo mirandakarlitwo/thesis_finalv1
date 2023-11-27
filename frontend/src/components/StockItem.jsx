@@ -63,6 +63,7 @@ function StockItem({ stock, onUpdate, onDelete }) {
   return (
     <>
       <tr>
+        <td>{stock.productId}</td>
         <td>{stock.name}</td>
         <td>{stock.category}</td>
         <td>{stock.price}</td>

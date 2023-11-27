@@ -39,14 +39,21 @@ function Login({ setIsLoggedIn }) {
     const data = await response.json();
 
     if (response.ok) {
-      const { token } = data;
+      const { token, role } = data;
 
       //store token to session storage
       sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userRole", role);
+      console.log(`Current Role:  ${role}`);
 
       setIsLoggedIn(true);
       alert("Login Successful");
-      navigate("/dashboard");
+
+      if (role === "admin") {
+        navigate("/dashboard");
+      } else if (role === "user") {
+        navigate("/userdashboard");
+      }
 
       //clear errors if user succesfully logged in
       setErrors({});
@@ -72,9 +79,10 @@ function Login({ setIsLoggedIn }) {
 
     if (token) {
       setIsLoggedIn(true);
-      navigate("/dashboard");
+      const role = sessionStorage.getItem("userRole");
+      navigate(role === "admin" ? "/dashboard" : "/userdashboard");
     }
-  }, []);
+  }, [navigate, setIsLoggedIn]);
 
   return (
     <>

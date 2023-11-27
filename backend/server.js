@@ -32,14 +32,21 @@ const authenticateToken = async (req, res, next) => {
 
   if (authorization && authorization.startsWith("Bearer")) {
     try {
-      // retrieve token
+      // Retrieve token
       token = authorization.split(" ")[1];
 
-      // verify token
+      // Verify token
       const verifyToken = jwt.verify(token, secretKey);
 
       // Get user from the token
-      req.user = await User.findById(verifyToken.id).select("-password");
+      let userQuery = User.findById(verifyToken.id).select("-password");
+
+      // Only populate cart for non-admin users
+      if (req.user && req.user.role !== "admin") {
+        userQuery = userQuery.populate("cart");
+      }
+
+      req.user = await userQuery.exec();
 
       next();
     } catch (error) {
@@ -75,8 +82,9 @@ const isAdmin = (req, res, next) => {
 //@route POST /api/stocks
 app.post("/api/stocks", authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { name, price, category, quantity } = req.body;
+    const { productId, name, price, category, quantity } = req.body;
     const stocks = await Stocks.create({
+      productId,
       name,
       price,
       category,
@@ -222,9 +230,9 @@ app.post("/api/users", async (req, res) => {
   try {
     const { username, password, role } = req.body;
 
-    if (!username || !password || !role) {
+    if (!username || !password) {
       res.status(400).json({
-        message: "Please add all fields",
+        message: "Please provide a username and password",
       });
     }
 
@@ -300,6 +308,7 @@ app.post("/api/users/login", async (req, res) => {
       message: `Hello ${user.username}`,
       _id: user.id,
       name: user.username,
+      role: user.role,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -312,14 +321,99 @@ app.post("/api/users/login", async (req, res) => {
 
 app.get("/api/users/me", authenticateToken, async (req, res) => {
   try {
-    const { _id, name } = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
 
     res.status(200).json({
-      id: _id,
-      name,
+      id: user._id,
+      cart: user.cart,
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      message: "An error has occurred",
+      error: error.message,
+    });
+  }
+});
+
+// ----------------------- CART ENDPOINTS -----------------------
+
+//@desc Add item to user's cart
+//@route PUT /api/add-to-cart
+app.put("/api/add-to-cart/:productId", authenticateToken, async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const product = await Stocks.findById(productId);
+
+    if (!product) {
+      return res.status(400).json({
+        message: "Product not found",
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // check if the product is already in the cart
+    const existingProduct = user.cart.find(
+      (item) => item.productName === product.name
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      user.cart.push({
+        productName: product.name,
+        quantity: 1,
+        price: product.price,
+      });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Item added to cart successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "An error has occurred",
+      error: error.message,
+    });
+  }
+});
+
+app.get("/api/users/cart", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      cart: user.cart,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "An error has occurred",
+      error: error.message,
+    });
   }
 });
 

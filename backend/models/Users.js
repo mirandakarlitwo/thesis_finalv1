@@ -15,6 +15,21 @@ const UserSchema = new Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  cart: [
+    {
+      productName: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+      },
+      price: {
+        type: Number,
+      },
+    },
+  ],
 });
 
 const User = model("User", UserSchema);

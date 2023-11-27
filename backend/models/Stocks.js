@@ -2,6 +2,11 @@ import { Schema, model } from "mongoose";
 
 const StocksSchema = new Schema(
   {
+    productId: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     name: {
       type: String,
       required: [true, "Please add a name"],
