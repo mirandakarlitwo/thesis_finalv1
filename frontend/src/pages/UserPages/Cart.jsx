@@ -61,12 +61,12 @@ const Cart = () => {
               <h3>{item.productName}</h3>
               <h5>Quantity: {item.quantity}</h5>
               <p>Price per unit: ${item.price}</p>
-              <h4>Total: ${item.price * item.quantity}</h4>
+              <h4>Total: ₱{item.price * item.quantity}</h4>
             </div>
           ))
         )}
 
-        <h1>Total Price: ${formattedTotalPrice}</h1>
+        <h1>Total Price: ₱{formattedTotalPrice}</h1>
 
         <button className="btn btn-block" onClick={onButtonClick}>
           Place Order
@@ -80,7 +80,7 @@ const Cart = () => {
               &times;
             </span>
             <h2>Order Confirmation</h2>
-            <h1>Total Price: ${formattedTotalPrice}</h1>
+            <h1>Total Price: ₱{formattedTotalPrice}</h1>
             <div className="form-group-order">
               <form>
                 <p>Name: </p>
