@@ -12,7 +12,7 @@ const Cart = () => {
 
       const response = await fetch(`${URL}/api/users/cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ₱{token}`,
         },
       });
 
@@ -60,7 +60,7 @@ const Cart = () => {
             <div className="cartCard" key={item._id}>
               <h3>{item.productName}</h3>
               <h5>Quantity: {item.quantity}</h5>
-              <p>Price per unit: ${item.price}</p>
+              <p>Price per unit: ₱{item.price}</p>
               <h4>Total: ₱{item.price * item.quantity}</h4>
             </div>
           ))
