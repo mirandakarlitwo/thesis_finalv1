@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
+import Stocks from "./Stocks.js";
 
 const UserSchema = new Schema({
   username: {

@@ -44,6 +44,8 @@ function UserDashboard() {
 
       if (data.message === "Item added to cart successfully") {
         console.log("Item added to cart successfully");
+
+        fetchStocks();
       } else {
         console.error("Failed to add item to cart:", data.message);
       }
@@ -72,6 +74,7 @@ function UserDashboard() {
               <th>Product Name</th>
               <th>Category</th>
               <th>Price</th>
+              <th>Stocks Left</th>
             </tr>
           </thead>
           <tbody>

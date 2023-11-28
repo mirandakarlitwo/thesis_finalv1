@@ -11,6 +11,7 @@ function Products({ stock, addToCart }) {
         <td>{stock.name}</td>
         <td>{stock.category}</td>
         <td>{stock.price}</td>
+        <td>{stock.quantity}</td>
         <td>
           <button
             className="btn btn-block"

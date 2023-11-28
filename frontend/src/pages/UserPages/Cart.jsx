@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [modal, setModal] = useState(false);
+  const [updatedQuantity, setUpdatedQuantity] = useState(1);
 
   const URL = import.meta.env.VITE_REACT_API_URL;
 
@@ -12,7 +13,7 @@ const Cart = () => {
 
       const response = await fetch(`${URL}/api/users/cart`, {
         headers: {
-          Authorization: `Bearer ₱{token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -26,6 +27,25 @@ const Cart = () => {
   useEffect(() => {
     fetchCartItems();
   }, []);
+
+  const removeFromCart = async (productName) => {
+    try {
+      const token = sessionStorage.getItem("token");
+
+      await fetch(`${URL}/api/remove-from-cart/${productName}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Fetch the updated cart items and refresh the UI
+      fetchCartItems();
+    } catch (error) {
+      console.error("Removing item from cart unsuccessful", error);
+    }
+  };
 
   const totalCartPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -42,10 +62,28 @@ const Cart = () => {
     setModal(false);
   };
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = async () => {
     setModal(false);
 
-    alert("Ordered Successfully");
+    try {
+      // Clear the entire cart on the server
+      const token = sessionStorage.getItem("token");
+      await fetch(`${URL}/api/users/clear-cart`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Display a success message to the user
+      alert("Ordered Successfully");
+
+      // Fetch the updated cart items
+      fetchCartItems();
+    } catch (error) {
+      console.error("Clearing cart unsuccessful", error);
+    }
   };
 
   return (
@@ -62,6 +100,13 @@ const Cart = () => {
               <h5>Quantity: {item.quantity}</h5>
               <p>Price per unit: ₱{item.price}</p>
               <h4>Total: ₱{item.price * item.quantity}</h4>
+
+              <button
+                className="btn btn-block"
+                onClick={() => removeFromCart(item.productName)}
+              >
+                Remove From Cart
+              </button>
             </div>
           ))
         )}

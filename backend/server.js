@@ -344,8 +344,8 @@ app.get("/api/users/me", authenticateToken, async (req, res) => {
 
 // ----------------------- CART ENDPOINTS -----------------------
 
-//@desc Add item to user's cart
-//@route PUT /api/add-to-cart
+// @desc Add item to user's cart
+// @route PUT /api/add-to-cart/:productId
 app.put("/api/add-to-cart/:productId", authenticateToken, async (req, res) => {
   try {
     const { productId } = req.params;
@@ -371,15 +371,27 @@ app.put("/api/add-to-cart/:productId", authenticateToken, async (req, res) => {
       (item) => item.productName === product.name
     );
 
+    // Check if there are enough stocks available
+    if (existingProduct && existingProduct.quantity >= product.quantity) {
+      return res.status(400).json({
+        message: "Not enough stocks available",
+      });
+    }
+
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
       user.cart.push({
+        productId: product.productId,
         productName: product.name,
         quantity: 1,
         price: product.price,
       });
     }
+
+    // Decrease the quantity of stocks in the database
+    product.quantity -= 1;
+    await product.save();
 
     await user.save();
 
@@ -395,6 +407,8 @@ app.put("/api/add-to-cart/:productId", authenticateToken, async (req, res) => {
   }
 });
 
+//@desc fetch user's cart data
+//@GET /api/users/cart
 app.get("/api/users/cart", authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -416,6 +430,93 @@ app.get("/api/users/cart", authenticateToken, async (req, res) => {
     });
   }
 });
+
+//@desc update the cart and set the user's cart to empty upon successful order
+//@POST /api/users/clear-cart
+app.post("/api/users/clear-cart", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // Clear the user's cart
+    user.cart = [];
+    await user.save();
+
+    res.status(200).json({
+      message: "Cart cleared successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error has occurred",
+      error: error.message,
+    });
+  }
+});
+
+//@desc remove item from user's cart
+//@route PUT /api/remove-from-cart/:productId
+app.put(
+  "/api/remove-from-cart/:productName",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { productName } = req.params;
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      // Find the index of the item in the cart
+      const itemIndex = user.cart.findIndex(
+        (item) => item.productName === productName
+      );
+
+      if (itemIndex !== -1) {
+        // Get the removed item from the cart
+        const removedItem = user.cart[itemIndex];
+
+        // Update Stocks based on the quantity of the removed item
+        const product = await Stocks.findOne({ name: productName });
+
+        if (!product) {
+          return res.status(400).json({
+            message: "Product not found",
+          });
+        }
+
+        // Increase the quantity of stocks in the database
+        product.quantity += removedItem.quantity;
+        await product.save();
+
+        // Remove the item from the cart array
+        user.cart.splice(itemIndex, 1);
+        await user.save();
+
+        res.status(200).json({
+          message: "Item removed from cart successfully",
+        });
+      } else {
+        res.status(404).json({
+          message: "Item not found in cart",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: "An error has occurred",
+        error: error.message,
+      });
+    }
+  }
+);
 
 //server start
 app.listen(PORT, () => {
