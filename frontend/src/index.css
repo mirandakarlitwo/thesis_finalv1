@@ -9,6 +9,7 @@
 body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
+  background-color: rgba(255, 50, 50, 0.8);
 }
 
 .logo a {
@@ -63,7 +64,7 @@ h3 {
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid black;
   margin-bottom: 60px;
 }
 
@@ -190,6 +191,7 @@ h3 {
 }
 
 .cartCard {
+  background: rgb(237, 231, 255);
   width: 50%;
   margin: auto;
   padding-bottom: 10px;
@@ -296,17 +298,18 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  background-color: white;
 }
 
 td,
 th {
-  border: 1px solid #dddddd;
+  border: 1px solid black;
   text-align: center;
   padding: 8px;
 }
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: white;
 }
 
 @keyframes slide-down {

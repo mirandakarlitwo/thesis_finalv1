@@ -124,6 +124,7 @@ const Cart = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
+            <p>Note: All orders are subjected to Cash on Delivery Only</p>
             <h2>Order Confirmation</h2>
             <h1>Total Price: ₱{formattedTotalPrice}</h1>
             <div className="form-group-order">
