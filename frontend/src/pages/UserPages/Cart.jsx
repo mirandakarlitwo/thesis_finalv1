@@ -66,23 +66,34 @@ const Cart = () => {
     setModal(false);
 
     try {
-      // Clear the entire cart on the server
       const token = sessionStorage.getItem("token");
-      await fetch(`${URL}/api/users/clear-cart`, {
+
+      // Collect user information from the form
+      const name = document.getElementById("name").value;
+      const address = document.getElementById("address").value;
+      const contact = document.getElementById("contact").value;
+
+      // Send order data to the server
+      const response = await fetch(`${URL}/api/orders`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          name,
+          address,
+          contact,
+        }),
       });
 
-      // Display a success message to the user
-      alert("Ordered Successfully");
+      const { message, data } = await response.json();
+      alert(message);
 
       // Fetch the updated cart items
       fetchCartItems();
     } catch (error) {
-      console.error("Clearing cart unsuccessful", error);
+      console.error("Placing order unsuccessful", error);
     }
   };
 
@@ -130,11 +141,11 @@ const Cart = () => {
             <div className="form-group-order">
               <form>
                 <p>Name: </p>
-                <input type="text" className="form-control" />
+                <input type="text" className="form-control" id="name" />
                 <p>Address: </p>
-                <input type="text" className="form-control" />
+                <input type="text" className="form-control" id="address" />
                 <p>Contact #: </p>
-                <input type="text" className="form-control" />
+                <input type="text" className="form-control" id="contact" />
               </form>
             </div>
             <div className="form-group">

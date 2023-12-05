@@ -28,7 +28,14 @@ function Header({ isLoggedIn, setIsLoggedIn, userRole }) {
       <div className="logo">
         {isLoggedIn ? (
           userRole === "admin" ? (
-            <Link to="/dashboard">Dashboard</Link>
+            <ul>
+              <li>
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/orders">Orders</Link>
+              </li>
+            </ul>
           ) : (
             <Link to="/userdashboard">Joven's Minimart</Link>
           )

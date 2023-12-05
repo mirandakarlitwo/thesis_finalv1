@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import Stocks from "./models/Stocks.js";
 import User from "./models/Users.js";
+import Orders from "./models/Orders.js";
 
 dotenv.config();
 
@@ -517,6 +518,59 @@ app.put(
     }
   }
 );
+
+// ---------------------- ORDERS ENDPOINT ---------------------------
+
+//@desc create order
+//@route POST /api/orders
+app.post("/api/orders", authenticateToken, async (req, res) => {
+  try {
+    const { name, contact, address } = req.body;
+    const items = req.user.cart.map((item) => ({
+      productName: item.productName,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    const order = await Orders.create({
+      name,
+      contact,
+      address,
+      items,
+    });
+
+    // Clear the user's cart after placing the order
+    req.user.cart = [];
+    await req.user.save();
+
+    res.status(201).json({
+      message: "Order placed successfully",
+      data: order,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error has occurred",
+      error: error.message,
+    });
+  }
+});
+
+//@desc GET orders
+//@route GET /api/get-orders/
+app.get("/api/get-orders", authenticateToken, async (req, res) => {
+  try {
+    const orders = await Orders.find();
+
+    res.status(200).json({
+      data: orders,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error has occured",
+      error: error.message,
+    });
+  }
+});
 
 //server start
 app.listen(PORT, () => {

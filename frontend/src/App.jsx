@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import UserDashboard from "./pages/UserPages/UserDashboard";
 import Cart from "./pages/UserPages/Cart";
 import Register from "./pages/Register";
+import Orders from "./pages/Orders";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,6 +60,7 @@ function App() {
               path="/login"
               element={<Login setIsLoggedIn={setIsLoggedIn} />}
             />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/register" element={<Register />} />
             <Route path="/cart" element={<Cart />} />
           </Routes>
